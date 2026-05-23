@@ -1,0 +1,182 @@
+# =============================================================================
+# Ghostty — Optimized Smooth Native Config
+# Author: anvndev
+# Profile: Backend / Cloud DevOps
+# Optimized for: macOS + Linux | Neovim + Tmux
+# Performance Status: Extreme Anti-Stutter Engine Active
+# =============================================================================
+
+# =============================================================================
+# Font & Typography
+# =============================================================================
+
+# Using the standard Nerd Font (non-Mono) allows icons to scale and render better
+font-family = JetBrainsMono Nerd Font
+font-size = 9
+
+# Provide ample breathing room for Nerd Font icons to prevent clipping
+adjust-cell-height = 15%
+adjust-cell-width = 0%
+
+# Disable ligatures for strict and consistent code alignment
+font-feature = -liga
+
+# Keep Retina text rendering crisp on macOS displays
+font-thicken = false
+
+# =============================================================================
+# Theme & Aesthetics (Premium High-Contrast Dark Green)
+# =============================================================================
+
+# Deep forest dark green base for ultra eye comfort
+background = #0b1410
+foreground = #d7e3dc
+
+# Crisp and visible mint cursor
+cursor-color = #a6e3a1
+cursor-style = bar
+cursor-opacity = 0.85
+# Controls cursor blink timing (true uses native OS animation intervals)
+cursor-style-blink = true
+
+# Deep comfortable forest green for selections
+selection-background = #1f3329
+selection-foreground = #e3ede8
+
+bold-is-bright = false
+minimum-contrast = 1.1
+
+# Base ANSI Colors (Restored vibrancy for prominent visibility)
+palette = 0=#161f1b
+palette = 1=#ef7e7e
+palette = 2=#98d393
+palette = 3=#f0b475
+palette = 4=#89b4fa
+palette = 5=#e39ee3
+palette = 6=#7bc5b6
+palette = 7=#b5caa0
+
+# Bright ANSI Colors (Pop out colors for prompts like Starship and Neovim)
+palette = 8=#475750
+palette = 9=#fca2a2
+palette = 10=#a6e3a1
+palette = 11=#fab387
+palette = 12=#a4c5fd
+palette = 13=#f5c2e7
+palette = 14=#94e2d5
+palette = 15=#d7e3dc
+
+# =============================================================================
+# Window & Compositor (Optimized for Pure Speed)
+# =============================================================================
+
+# Hard opacity and zero blur completely disable real-time Alpha Blending layout cycles.
+# This grants the GPU 100% processing headroom to handle heavy AI streaming loops.
+background-opacity = 1.0
+background-blur-radius = 0
+
+# Stable color rendering
+window-colorspace = srgb
+
+macos-titlebar-style = hidden
+macos-titlebar-proxy-icon = hidden
+
+# Comfortable and balanced padding for a cleaner UI layout
+window-padding-x = 15
+window-padding-y = 4
+window-padding-balance = true
+
+# Reduce unnecessary window state retention
+window-save-state = default
+window-inherit-working-directory = true
+
+# Cleaner resize behavior
+resize-overlay = never
+
+# =============================================================================
+# Advanced Extreme Performance Engine
+# =============================================================================
+
+# No shaders = lower GPU spikes + more stable frame pacing
+custom-shader = none
+
+# Keep Ghostty lightweight since Tmux already handles scrollback history
+scrollback-limit = 5000
+
+copy-on-select = false
+
+mouse-hide-while-typing = true
+mouse-scroll-multiplier = 2
+
+clipboard-read = allow
+clipboard-trim-trailing-spaces = true
+
+quit-after-last-window-closed = true
+
+# =============================================================================
+# Cursor, Input & Shell Integration
+# =============================================================================
+
+# Native cursor movement behavior
+cursor-click-to-move = true
+
+# Stable shell integration
+shell-integration = detect
+shell-integration-features = sudo,title
+
+# Native terminal identity
+term = xterm-ghostty
+
+macos-option-as-alt = true
+
+# =============================================================================
+# Keybindings: Tabs
+# =============================================================================
+
+keybind = cmd+t=new_tab
+keybind = cmd+w=close_surface
+
+keybind = cmd+]=next_tab
+keybind = cmd+[=previous_tab
+
+keybind = cmd+1=goto_tab:1
+keybind = cmd+2=goto_tab:2
+keybind = cmd+3=goto_tab:3
+keybind = cmd+4=goto_tab:4
+keybind = cmd+5=goto_tab:5
+
+# =============================================================================
+# Keybindings: Windows & Splits
+# =============================================================================
+
+keybind = cmd+n=new_window
+
+keybind = cmd+d=new_split:right
+keybind = cmd+shift+d=new_split:down
+
+keybind = cmd+ctrl+h=goto_split:left
+keybind = cmd+ctrl+j=goto_split:bottom
+keybind = cmd+ctrl+k=goto_split:top
+keybind = cmd+ctrl+l=goto_split:right
+
+keybind = cmd+shift+f=toggle_fullscreen
+
+# =============================================================================
+# Keybindings: Font Scaling
+# =============================================================================
+
+keybind = cmd+equal=increase_font_size:1
+keybind = cmd+minus=decrease_font_size:1
+keybind = cmd+0=reset_font_size
+
+# =============================================================================
+# Keybindings: Clipboard & System
+# =============================================================================
+
+keybind = cmd+c=copy_to_clipboard
+keybind = cmd+v=paste_from_clipboard
+
+keybind = cmd+shift+c=clear_screen
+
+# Reload configuration instantly
+keybind = cmd+r=reload_config

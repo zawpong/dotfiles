@@ -1,0 +1,143 @@
+local M = {}
+
+-- Normalize plugin specifications for vim.pack
+local function normalize(spec)
+	local source = type(spec) == "string" and spec or spec.source
+
+	-- Expand GitHub shorthand into full URL
+	if not (source:find("http", 1, true) or source:find("git@", 1, true)) then
+		source = "https://github.com/" .. source
+	end
+
+	local final = type(spec) == "table" and vim.tbl_extend("force", {}, spec) or {}
+
+	final.src = source
+	final.source = nil
+
+	return final
+end
+
+-- Batch plugin registration
+local function add(specs)
+	vim.pack.add(vim.tbl_map(normalize, specs))
+end
+
+-- Create helper commands only once
+local function create_commands()
+	if vim.g.pack_commands_created then
+		return
+	end
+
+	vim.g.pack_commands_created = true
+
+	vim.api.nvim_create_user_command("PackUpdate", function()
+		vim.pack.update()
+	end, {
+		desc = "Update plugins",
+	})
+
+	vim.api.nvim_create_user_command("PackClean", function()
+		local inactive = vim.iter(vim.pack.get())
+			:filter(function(plugin)
+				return not plugin.active
+			end)
+			:map(function(plugin)
+				return plugin.spec.name or plugin.spec.src
+			end)
+			:totable()
+
+		if #inactive > 0 then
+			vim.notify("Removing:\n" .. table.concat(inactive, "\n"), vim.log.levels.INFO)
+
+			vim.pack.del(inactive)
+		else
+			vim.notify("No inactive plugins found", vim.log.levels.INFO)
+		end
+	end, {
+		desc = "Remove inactive plugins",
+	})
+
+	vim.api.nvim_create_user_command("ParsersUpdate", function()
+		local script = vim.fn.stdpath("config") .. "/scripts/parsers"
+		vim.fn.jobstart({ script }, {
+			stdout_buffered = true,
+			on_stdout = function(_, data)
+				if data then
+					for _, line in ipairs(data) do
+						if line ~= "" then
+							print(line)
+						end
+					end
+				end
+			end,
+			on_exit = function(_, code)
+				if code == 0 then
+					vim.notify("Treesitter parsers updated successfully!", vim.log.levels.INFO)
+				else
+					vim.notify("Treesitter parser update failed!", vim.log.levels.ERROR)
+				end
+			end,
+		})
+	end, {
+		desc = "Update Treesitter parsers",
+	})
+end
+
+function M.setup()
+	-- Register user commands immediately (cheap)
+	create_commands()
+
+	-- Phase 1: UI (Now deferred until the first idle period)
+	vim.schedule(function()
+		add({
+			{ source = "folke/tokyonight.nvim", name = "tokyonight" },
+			{ source = "echasnovski/mini.nvim" },
+		})
+
+		pcall(function()
+			require("plugins.theme").setup()
+			require("plugins.mini").setup()
+		end)
+	end)
+
+	-- Phase 2: Core Editing (Triggered by file access)
+
+	vim.api.nvim_create_autocmd({ "BufReadPre", "BufNewFile" }, {
+		group = vim.api.nvim_create_augroup("PackPhase2", { clear = true }),
+		once = true,
+		callback = function()
+			add({
+				{ source = "neovim/nvim-lspconfig" },
+				{ source = "stevearc/conform.nvim" },
+			})
+
+			pcall(function()
+				-- require("infra.lsp").setup() -- Handled lazily by FileType autocmd
+				require("plugins.format").setup()
+			end)
+		end,
+	})
+
+	-- Phase 3: Extra Features & Tools (Triggered by typing or deferred)
+	vim.api.nvim_create_autocmd("InsertEnter", {
+		group = vim.api.nvim_create_augroup("PackPhase3", { clear = true }),
+		once = true,
+		callback = function()
+			add({
+				{ source = "mfussenegger/nvim-dap" },
+				{ source = "nvim-neotest/nvim-nio" },
+				{ source = "rcarriga/nvim-dap-ui" },
+				{ source = "leoluz/nvim-dap-go" },
+				{ source = "Robitx/gp.nvim" },
+				{ source = "zbirenbaum/copilot.lua" },
+			})
+
+			pcall(function()
+				require("plugins.dap").setup()
+				require("plugins.ai").setup()
+			end)
+		end,
+	})
+end
+
+return M

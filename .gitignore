@@ -1,86 +1,55 @@
 # ==============================================================================
-# 1. CORE ALLOWLIST STRATEGY
+# Security & Sensitive Data (Crucial for Public GitHub Repos)
 # ==============================================================================
-# Ignore absolutely everything by default
-*
-
-# Allow Git to traverse all directories to look for allowed files.
-# (Git doesn't track empty directories anyway, so this is safe)
-!*/
-
-# ==============================================================================
-# 2. GLOBAL & SENSITIVE DATA EXCLUSIONS (The "Stay Safe" Guardrails)
-# ==============================================================================
-# Never track runtime data, history, or swap files anywhere
-*.swp
-.*.swp
-*~
-.DS_Store
-.netrwhist
-*-lock.json
-
-# Shell & Command Histories (Never track what you type)
-.bash_history
-.bash_local
-.bash_logout
-.zsh_history
-.zsh/data/**
-.zsh/*local
-
-# Security & Secrets Guardrails
-.gnupg/**
-.ssh/**
+# Ignore any accidental env or local credential files
+*.env
+*.env.*
+.envrc
+*.secret
+*.token
 *secret*
-*token*
+*credential*
+
+# Ignore active private keys, certificates, or SSH fragments
 *.pem
 *.key
+*.pub
+id_rsa
+id_edd25519
 
 # ==============================================================================
-# 3. GLOBAL DOTFILES (Root level)
+# Neovim / Vim Specifics (config/nvim)
 # ==============================================================================
-!setup.sh
-!.bash*
-!.profile
-!.zshrc
-!.zsh/**
-!.gitconfig
-!.gitignore
-!.gitexcludes
-!.tmux.conf
+# Ignore local machine modifications or machine-specific configs
+config/nvim/lua/machine/local.lua
+
+# Ignore runtime data, caches, undo histories, and swap files if they leak into here
+config/nvim/.netrwhist
+config/nvim/lazy-lock.json.bak
+*.swp
+*.swo
+*~
+.nfs*
 
 # ==============================================================================
-# 4. XDG CONFIGURATION (.config/) - Matches your exact tree
+# Shell History & Caches (zsh)
 # ==============================================================================
+# Shell history often leaks plain-text passwords and API tokens
+.zhistory
+.zsh_history
+.history
+.zcompdump*
+*.zwc
 
-# Terminal Emulators
-!.config/alacritty/**
-!.config/foot/**
-!.config/ghostty/**
-!.config/kitty/**
+# ==============================================================================
+# System, Desktop Environment, & Application Caches
+# ==============================================================================
+# OS generated files
+.DS_Store
+.directory
+Thumbs.db
 
-# Desktop / WM / Compositor (Hyprland, UWSM & Autostart)
-!.config/autostart/**
-!.config/hypr/**
-!.config/hyprland-preview-share-picker/**
-!.config/uwsm/**
-
-# System Management & Theme Symlinks
-!.config/btop/**
-!.config/fontconfig/**
-!.config/mako/**
-!.config/swayosd/**
-
-# Bar, Launchers, and Audio
-!.config/walker/**
-!.config/waybar/**
-!.config/wiremix/**
-
-# CLI Tools, Git Clients & Image Viewers
-!.config/lazygit/config.yml
-!.config/imv/**
-!.config/tmux/**
-
-# Neovim Development Environment
-!.config/nvim/**
-# Block potential heavy package manager runtime state if they download inside .config
-.config/nvim/lazy-lock.json
+# App specific runtime states/caches that shouldn't be tracked
+config/btop/btop.log
+config/walker/cache/
+config/walker/history/

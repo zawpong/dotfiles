@@ -1,0 +1,86 @@
+# ==============================================================================
+# 1. CORE ALLOWLIST STRATEGY
+# ==============================================================================
+# Ignore absolutely everything by default
+*
+
+# Allow Git to traverse all directories to look for allowed files.
+# (Git doesn't track empty directories anyway, so this is safe)
+!*/
+
+# ==============================================================================
+# 2. GLOBAL & SENSITIVE DATA EXCLUSIONS (The "Stay Safe" Guardrails)
+# ==============================================================================
+# Never track runtime data, history, or swap files anywhere
+*.swp
+.*.swp
+*~
+.DS_Store
+.netrwhist
+*-lock.json
+
+# Shell & Command Histories (Never track what you type)
+.bash_history
+.bash_local
+.bash_logout
+.zsh_history
+.zsh/data/**
+.zsh/*local
+
+# Security & Secrets Guardrails
+.gnupg/**
+.ssh/**
+*secret*
+*token*
+*.pem
+*.key
+
+# ==============================================================================
+# 3. GLOBAL DOTFILES (Root level)
+# ==============================================================================
+!setup.sh
+!.bash*
+!.profile
+!.zshrc
+!.zsh/**
+!.gitconfig
+!.gitignore
+!.gitexcludes
+!.tmux.conf
+
+# ==============================================================================
+# 4. XDG CONFIGURATION (.config/) - Matches your exact tree
+# ==============================================================================
+
+# Terminal Emulators
+!.config/alacritty/**
+!.config/foot/**
+!.config/ghostty/**
+!.config/kitty/**
+
+# Desktop / WM / Compositor (Hyprland, UWSM & Autostart)
+!.config/autostart/**
+!.config/hypr/**
+!.config/hyprland-preview-share-picker/**
+!.config/uwsm/**
+
+# System Management & Theme Symlinks
+!.config/btop/**
+!.config/fontconfig/**
+!.config/mako/**
+!.config/swayosd/**
+
+# Bar, Launchers, and Audio
+!.config/walker/**
+!.config/waybar/**
+!.config/wiremix/**
+
+# CLI Tools, Git Clients & Image Viewers
+!.config/lazygit/config.yml
+!.config/imv/**
+!.config/tmux/**
+
+# Neovim Development Environment
+!.config/nvim/**
+# Block potential heavy package manager runtime state if they download inside .config
+.config/nvim/lazy-lock.json

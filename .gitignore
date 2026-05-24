@@ -53,3 +53,6 @@ Thumbs.db
 config/btop/btop.log
 config/walker/cache/
 config/walker/history/
+
+.commit_suggest_history.json
+

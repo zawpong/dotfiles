@@ -77,7 +77,6 @@ alias grep='grep --color=auto'
 alias ll='ls -alF'
 alias la='ls -A'
 alias l='ls -CF'
-alias ..='cd ..'
 alias ...='cd ../..'
 alias zshconfig="nvim ~/.zshrc"
 alias zshreload="source ~/.zshrc"
@@ -85,7 +84,7 @@ alias zshreload="source ~/.zshrc"
 eval "$(paneship init zsh)"
 
 # ==============================================================================
-# 7. INTERACTIVE CLI TOOLS (FZF & ATUIN)
+# 7. INTERACTIVE CLI TOOLS (FZF, ATUIN & ZOXIDE)
 # ==============================================================================
 # 1. Initialize FZF (Claims Ctrl+R and Ctrl+T)
 if [ -f ~/.fzf.zsh ]; then
@@ -105,4 +104,9 @@ if command -v atuin &>/dev/null; then
 
   # Manually bind Atuin search widget to Ctrl+F
   bindkey '^F' atuin-search
+fi
+
+# 3. Initialize Zoxide (Smarter cd command)
+if command -v zoxide &>/dev/null; then
+  eval "$(zoxide init zsh)"
 fi
